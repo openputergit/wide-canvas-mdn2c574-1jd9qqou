@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemoCapsule - Your Digital Time Capsule</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-blue-600">MemoCapsule</span>
+                </div>
+                <div class="flex items-center space-x-4" id="navItems">
+                    <button onclick="showLoginModal()" class="text-gray-600 hover:text-blue-600" id="loginBtn">Login</button>
+                    <button onclick="showSignupModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" id="signupBtn">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-20 px-4 max-w-7xl mx-auto">
+        <!-- Gallery Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-8" id="gallery">
+            <!-- Gallery items will be dynamically added here -->
+        </div>
+
+        <!-- Add Post Button -->
+        <button onclick="showAddPostModal()" class="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700">
+            <i class="bi bi-plus text-2xl"></i>
+        </button>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="bg-white rounded-lg w-96 mx-auto mt-20 p-6">
+            <h2 class="text-2xl font-bold mb-4">Login</h2>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Login</button>
+            </form>
+            <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <i class="bi bi-x text-2xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="bg-white rounded-lg w-96 mx-auto mt-20 p-6">
+            <h2 class="text-2xl font-bold mb-4">Sign Up</h2>
+            <form id="signupForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Sign Up</button>
+            </form>
+            <button onclick="closeModal('signupModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <i class="bi bi-x text-2xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Add Post Modal -->
+    <div id="addPostModal" class="modal">
+        <div class="bg-white rounded-lg w-96 mx-auto mt-20 p-6">
+            <h2 class="text-2xl font-bold mb-4">Create New Post</h2>
+            <form id="addPostForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Images</label>
+                    <input type="file" multiple accept="image/*" required class="mt-1 block w-full">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Caption</label>
+                    <input type="text" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">Create Post</button>
+            </form>
+            <button onclick="closeModal('addPostModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <i class="bi bi-x text-2xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Simulated authentication state
+        let isAuthenticated = false;
+        let posts = [];
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showLoginModal() {
+            showModal('loginModal');
+        }
+
+        function showSignupModal() {
+            showModal('signupModal');
+        }
+
+        function showAddPostModal() {
+            if (!isAuthenticated) {
+                alert('Please login to create a post');
+                return;
+            }
+            showModal('addPostModal');
+        }
+
+        // Form handlers
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            isAuthenticated = true;
+            updateNavbar();
+            closeModal('loginModal');
+            alert('Successfully logged in!');
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            isAuthenticated = true;
+            updateNavbar();
+            closeModal('signupModal');
+            alert('Successfully signed up!');
+        });
+
+        document.getElementById('addPostForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newPost = {
+                id: Date.now(),
+                images: ['https://source.unsplash.com/random/800x600'],
+                caption: e.target.elements[1].value,
+                description: e.target.elements[2].value,
+                archived: false
+            };
+            posts.push(newPost);
+            updateGallery();
+            closeModal('addPostModal');
+            e.target.reset();
+        });
+
+        function updateNavbar() {
+            const navItems = document.getElementById('navItems');
+            if (isAuthenticated) {
+                navItems.innerHTML = `
+                    <button onclick="toggleArchiveView()" class="text-gray-600 hover:text-blue-600">
+                        <i class="bi bi-archive"></i> Archive
+                    </button>
+                    <button onclick="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                        Logout
+                    </button>
+                `;
+            } else {
+                navItems.innerHTML = `
+                    <button onclick="showLoginModal()" class="text-gray-600 hover:text-blue-600" id="loginBtn">Login</button>
+                    <button onclick="showSignupModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" id="signupBtn">Sign Up</button>
+                `;
+            }
+        }
+
+        function updateGallery() {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = posts.map(post => `
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="${post.images[0]}" alt="${post.caption}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg">${post.caption}</h3>
+                        <p class="text-gray-600 mt-2">${post.description}</p>
+                        <div class="mt-4 flex justify-between">
+                            <button onclick="toggleArchive(${post.id})" class="text-blue-600 hover:text-blue-800">
+                                <i class="bi ${post.archived ? 'bi-archive-fill' : 'bi-archive'}"></i>
+                            </button>
+                            <button onclick="deletePost(${post.id})" class="text-red-600 hover:text-red-800">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleArchive(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.archived = !post.archived;
+                updateGallery();
+            }
+        }
+
+        function deletePost(postId) {
+            posts = posts.filter(p => p.id !== postId);
+            updateGallery();
+        }
+
+        function logout() {
+            isAuthenticated = false;
+            posts = [];
+            updateNavbar();
+            updateGallery();
+        }
+
+        // Initialize the application
+        updateNavbar();
+        updateGallery();
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
